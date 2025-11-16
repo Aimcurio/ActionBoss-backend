@@ -1,80 +1,55 @@
-# FastAPI File Helper Backend
+# ActionBoss File Helper Backend
+A small, open-source FastAPI backend that gives your Custom GPT **real file-system powers**:
 
-This is a small, open‑source FastAPI backend that gives your Custom GPT
-basic "file system" powers:
+- List files and folders under a directory  
+- Read the contents of a text file  
+- Upload + unzip ZIP files  
+- Return the extracted file tree  
 
-- List files and folders under a directory
-- Read the contents of a text file
-- Upload and unzip a ZIP file, and return the extracted file tree
+This backend is designed to be used as a Custom GPT Action so your GPT can explore entire directories, repos, or assets just like a real agent.
 
-## Endpoints
+---
+
+# 🚀 Features
 
 ### `GET /health`
-Simple health check.
+Simple health check endpoint.  
+Used by Railway and Custom GPT to verify the server is running.
 
 ### `GET /fs/tree`
-List files and directories under a given root.
+Return a list of files and subdirectories under a given `root`.
 
-**Query parameters:**
-- `root` (optional): Path relative to the project root. Defaults to `"."`.
+**Query params:**
+- `root` (optional) — relative path. Default: `"."`.
 
 ### `GET /fs/file`
-Read a text file and return its contents.
+Read a text file and return the contents.
 
-**Query parameters:**
-- `path` (required): Path to the file, relative to the project root.
+**Query params:**
+- `path` (required) — file path relative to project root.
 
 ### `POST /fs/unzip`
-Upload a ZIP file and extract it on the server.
+Upload a ZIP file, extract it, and return the extracted tree.
 
-**Body:** `multipart/form-data`
-- `file`: The ZIP file to upload.
+**Body** (multipart/form-data):
+- `file`: the ZIP file
 
 **Response:**
-- `extract_root`: Where the ZIP contents were extracted.
-- `tree`: A simple listing of extracted files and folders.
+- `extract_root`: extraction directory
+- `tree`: extracted file tree
 
-## Quickstart (local)
+> Note: `python-multipart` is required for file uploads (included in requirements.txt).
 
-1. Make sure you have Python 3.10+ installed.
-2. Create a virtual environment (recommended):
+---
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate   # On Windows: .venv\Scripts\activate
-   ```
+# 🛠 Requirements
 
-3. Install dependencies:
+Your environment must have:
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+- Python 3.10+
+- FastAPI
+- Uvicorn
+- python-multipart (for file uploads)
 
-4. Run the server:
+These are included in `requirements.txt`:
 
-   ```bash
-   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-   ```
-
-5. Open your browser at:
-
-   - http://localhost:8000/docs  → interactive API docs
-   - http://localhost:8000/health → health check
-
-## Connecting to a Custom GPT (high‑level)
-
-Once this backend is deployed somewhere (for example on a VPS, Render,
-Railway, or another host), you'll get a public URL like:
-
-```text
-https://your-backend-url.example.com
-```
-
-In your Custom GPT "Actions" settings, you can then define endpoints such as:
-
-- `GET /health`
-- `GET /fs/tree`
-- `GET /fs/file`
-- `POST /fs/unzip`
-
-so the GPT can call them to explore your files and ZIP archives.
